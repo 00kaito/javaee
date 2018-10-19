@@ -1,8 +1,9 @@
 package com.jstart.servlets;
 
-import com.jstart.User;
+import com.jstart.model.UserDetails;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,17 +11,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/UserServlet")
-public class UserServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/UserDetailsServlet",
+        initParams = {@WebInitParam(name = "defaultUsername", value = "undefined"),
+                @WebInitParam(name = "defaultPassword", value = "undefined")})
+public class UserDetailsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = createUserFromRequest(request);
+        UserDetails user = createUserFromRequest(request);
+        if(user.getUsername()==null || "".equals(user.getUsername())){
+            user.setUsername(getInitParameter("defaultUsername"));
+        }
+        if(user.getPassword()==null || "".equals(user.getPassword())){
+            user.setPassword(getInitParameter("defaultPassword"));
+        }
         sendResponse(user, response);
     }
 
-    private void sendResponse(User user, HttpServletResponse response) throws IOException {
+    private void sendResponse(UserDetails user, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
         PrintWriter writer = response.getWriter();
@@ -41,8 +50,8 @@ public class UserServlet extends HttpServlet {
         writer.println("</html>");
     }
 
-    private User createUserFromRequest(HttpServletRequest request){
-        User user = new User();
+    private UserDetails createUserFromRequest(HttpServletRequest request){
+        UserDetails user = new UserDetails();
         user.setUsername(request.getParameter("username"));
         user.setPassword(request.getParameter("pass"));
         user.setGender(request.getParameter("gender"));

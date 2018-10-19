@@ -1,6 +1,6 @@
 package com.jstart.servlets;
 
-import com.jstart.User;
+import com.jstart.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/SessionServlet")
-public class SessionServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/UserSessionServlet")
+public class UserSessionServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
